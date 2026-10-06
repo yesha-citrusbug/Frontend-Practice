@@ -21,7 +21,7 @@ const BookDetails = ({
 
     return (
         <div>
-            <div>{description}</div>
+            <div>{description ?? "No description"}</div>
             <h3>Author : {author?.name ?? "Unknown author"}</h3>
             <h4>Max reading time(hours) : {maxReadTime ?? 0}</h4>
             <h4>Price : {price < 0 ? Math.abs(price) : price}</h4>
