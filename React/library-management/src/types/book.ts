@@ -8,6 +8,7 @@ export type Book = {
     description : string;
     maxReadTime : number;
     author? : Author;
+    year : number;
     price : number;
     isBorrowed : boolean
 }

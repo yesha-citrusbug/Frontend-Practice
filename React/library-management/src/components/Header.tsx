@@ -2,7 +2,10 @@ const Header = () => {
     return (
         <>
             <header>
-                <h1>Browse books</h1>
+                <span>
+                    <h1>Browse Books!!</h1>
+                </span>
+                
                 <hr></hr>
             </header>   
         </>

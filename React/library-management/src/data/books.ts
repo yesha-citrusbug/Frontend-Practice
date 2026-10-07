@@ -9,7 +9,8 @@ export const books : Book[] = [
         author : {
             name : "Paulo Coelho"
         },
-        price : -500,
+        year : 1998,
+        price : 500,
         isBorrowed : true,
     },
     {
@@ -20,6 +21,7 @@ export const books : Book[] = [
         author : {
             name : "George Orwell"
         },
+        year : 1995,
         price : 400,
         isBorrowed : true,
     },
@@ -31,6 +33,7 @@ export const books : Book[] = [
         author : {
             name : "Harper Lee"
         },
+        year : 2004,
         price : 1500,
         isBorrowed : false,
     },
@@ -39,9 +42,10 @@ export const books : Book[] = [
         name : "Educated",
         description : "A powerful true story of a young woman who leaves her strict survivalist family to earn a PhD.",
         maxReadTime : 150,
-        // author : {
-        //     name : "Tara Westover"
-        // },
+        author : {
+            name : "Tara Westover"
+        },
+        year : 2001,
         price : 200,
         isBorrowed : false,
     },
@@ -53,6 +57,7 @@ export const books : Book[] = [
         author : {
             name : "Madeline Miller"
         },
+        year : 2003,
         price : 500,
         isBorrowed : false,
     },
@@ -64,6 +69,7 @@ export const books : Book[] = [
         author : {
             name : "Markus Zusak"
         },
+        year : 1996,
         price : 2000,
         isBorrowed : false,
     }

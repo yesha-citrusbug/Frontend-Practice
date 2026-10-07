@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { books} from '../data/books'
-import Book from "./Book.tsx"
+import type { Book } from "../types/book.ts"
 
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
+const minYear = 1500;
 
 const initialFormData = {
     bookName : "",
@@ -14,38 +14,13 @@ const initialFormData = {
 
 }
 
-type BookProps = {
-    bookName: string;
-    authorName: string;
-    // year : number,
-    description : string;
-    maxReadTime: number;
-    price: number;
-    passCounter : (count:number) => void;
-    deleteHandle : (id:number) => void;
+type bookFormProps = {
+    addBookHandle : (book:Book)=> void;
+    cancelHandle : ()=>void;
 }
 
-const createNewBook = async ({bookName,authorName,description,maxReadTime,price,passCounter,deleteHandle}:BookProps) => {
-    const book_id = books.length + 1;
-
-    const newBookData = {
-        id: book_id, 
-        name: bookName, 
-        description: description,
-        author: {
-            name: authorName,
-        },
-        maxReadTime: maxReadTime, 
-        price: price,
-        isBorrowed: false
-    };
-    
-    <Book key={book_id} {...newBookData} setCounter={passCounter} deleteBook={deleteHandle}></Book>
-
-}
-
-function newBookForm() {
-    const [formData, setForrmData] = useState(initialFormData);
+function NewBookForm({addBookHandle,cancelHandle}:bookFormProps) {
+    const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
 
@@ -65,7 +40,7 @@ function newBookForm() {
 
     const validateForm = () => {
         const validationErrors = {};
-    
+        console.log("Validation started!!");
         if (!formData.bookName.trim()) {
             validationErrors.bookName = "Book title required!!";
         }
@@ -74,8 +49,8 @@ function newBookForm() {
             validationErrors.authorName = "Author name required!!";
         }
 
-        if ((formData.publishedYear < 1500) || (formData.publishedYear > currentYear)) {
-            validationErrors.publishedYear = "Publication year must be between 1500 and present year!!";
+        if ((formData.publishedYear < minYear) || (formData.publishedYear > currentYear)) {
+            validationErrors.publishedYear = `Publication year must be between 1500 and ${currentYear}!!`;
         }
 
         if (!formData.price) {
@@ -100,84 +75,138 @@ function newBookForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        
         const validationErrors = validateForm();
-
+        console.log("Errors :",validationErrors);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
         }
-
+        
         setErrors({});
         setIsSaving(true);
-    }
 
-    try {
+        try {
+            const newBook:Book = {
+                id: Date.now(),
+                name: formData.bookName,
+                author : {
+                    name: formData.authorName,
+                },
+                description : formData.description,
+                year : formData.publishedYear,
+                maxReadTime : formData.maxReadTime,
+                price : formData.price,
+                isBorrowed : false
+            };
+            
+            await addBookHandle(newBook);
+            setFormData(initialFormData);
+        }
+        catch (error) {
+            console.log("Error :",error);
+            setIsSaving(false);
+        }
+        finally {
+            setIsSaving(false);
+        }
+    };
 
-        const data = {...formData,passCounter:"",deleteHandle:""}
-        await createNewBook({...data});
-
-        setForrmData(initialFormData);
-    }
-    finally {
-        setIsSaving(false);
-    }
+    
 
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label>Book Name</label>
+                <label>Book Name : </label>
 
                 <input
                     name="bookName"
                     value={formData.bookName}
                     onChange={handleChange}
+                    
                 />
 
                 {errors.bookName && (
-                    <p>{errors.bookName}</p>
+                    <span>  {errors.bookName}</span>
                 )}
             </div>
 
             <div>
-                <label>Author</label>
+                <label>Author : </label>
 
                 <input
                     name="authorName"
                     value={formData.authorName}
                     onChange={handleChange}
+                    
                 />
 
                 {errors.authorName && (
-                    <p>{errors.authorName}</p>
+                    <span>  {errors.authorName}</span>
                 )}
             </div>
 
             <div>
-                <label>Price</label>
+                <label>Description : </label>
+
+                <input
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    
+                />
+
+                {errors.description && (
+                    <span>  {errors.description}</span>
+                )}
+            </div>
+
+            <div>
+                <label>Price : </label>
 
                 <input
                     name="price"
+                    type="number"
                     value={formData.price}
                     onChange={handleChange}
+                    
                 />
 
                 {errors.price && (
-                    <p>{errors.price}</p>
+                    <span>  {errors.price}</span>
                 )}
             </div>
 
             <div>
-                <label>Max reading time</label>
+                <label>Max reading time (in hours) : </label>
 
                 <input
                     name="maxReadTime"
+                    type="number"
                     value={formData.maxReadTime}
                     onChange={handleChange}
                 />
 
                 {errors.maxReadTime && (
-                    <p>{errors.maxReadTime}</p>
+                    <span>  {errors.maxReadTime}</span>
+                )}
+            </div>
+
+            <div>
+                <label>Publication Year : </label>
+
+                <input
+                    name="publishedYear"
+                    type="number"
+                    value={formData.publishedYear}
+                    onChange={handleChange}
+                    // min={minYear}
+                    // max={currentYear}
+                    
+                />
+
+                {errors.publishedYear && (
+                    <span>  {errors.publishedYear}</span>
                 )}
             </div>
 
@@ -189,12 +218,15 @@ function newBookForm() {
                 type="submit"
                 disabled={isSaving}
             >
-                {isSaving ? "Saving..." : "Create Account"}
+                {isSaving ? "Saving..." : "Add Book"}
+            </button>
+            <span>              </span>
+            <button onClick={cancelHandle} disabled={isSaving}>
+                Cancel
             </button>
         </form>
     );
 
-
 }
 
-
+export default NewBookForm;

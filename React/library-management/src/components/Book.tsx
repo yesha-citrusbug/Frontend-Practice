@@ -9,13 +9,14 @@ type BookProps = {
         name: string;
     };
     maxReadTime: number;
+    year: number;
     price: number;
     isBorrowed : boolean;
     setCounter : (count:number) => void;
     deleteBook : (id:number) => void;
 }
 
-const Book = ({id,name,description,author,maxReadTime,price,isBorrowed, setCounter,deleteBook}:BookProps) => {
+const Book = ({id,name,description,author,maxReadTime,year,price,isBorrowed, setCounter,deleteBook}:BookProps) => {
     
     console.log("Book no :",id);
     console.log("Current state : ",isBorrowed);
@@ -38,7 +39,7 @@ const Book = ({id,name,description,author,maxReadTime,price,isBorrowed, setCount
         <div>
             <h2>{name}</h2>
             <button onClick={() => {expandViewDetails((prev)=>!prev);}}>{hasViewedDetails ? "Hide Details":"View Details"}</button>
-            {hasViewedDetails ? <BookDetails description={description} author={author} maxReadTime={maxReadTime} price={price} /> : <div></div>}
+            {hasViewedDetails ? <BookDetails description={description} author={author} maxReadTime={maxReadTime} year={year} price={price} /> : <div></div>}
             <button onClick={updateBorrowState}>{hasBorrowed ? "Return" : "Borrow"} </button>
             <div></div>
             {/* <div>Book: {name} | state status: {hasBorrowed ? "True":"False"} | actual value: {isBorrowed ? "True":"False"}</div> */}

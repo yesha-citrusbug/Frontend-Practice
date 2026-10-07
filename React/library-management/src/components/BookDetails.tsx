@@ -6,13 +6,14 @@ type BookDetailsProps = {
         name: string;
     };
     maxReadTime: number;
+    year: number;
     price: number;
 }
 
 
 
 const BookDetails = ({
-    description,author,maxReadTime,price
+    description,author,maxReadTime,year,price
 }: BookDetailsProps) => {
 
     // if (allBooks.length === 0) {
@@ -24,7 +25,9 @@ const BookDetails = ({
             <div>{description ?? "No description"}</div>
             <h3>Author : {author?.name ?? "Unknown author"}</h3>
             <h4>Max reading time(hours) : {maxReadTime ?? 0}</h4>
+            <h4>Publication Year : {year ?? "Unknown"}</h4>
             <h4>Price : {price < 0 ? Math.abs(price) : price}</h4>
+
         </div>
     );
 };

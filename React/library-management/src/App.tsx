@@ -1,7 +1,7 @@
 import { books} from './data/books'
 import Header from './components/Header'
 import BookList from './components/BookList'
-
+import NewBookForm from './components/NewBookForm'
 import './App.css'
 import { useState } from 'react'
 // import type { Book } from './types/book'
@@ -17,9 +17,23 @@ function countInitialBorrow(){
 }
 countInitialBorrow();
 
+type newBookProps = {
+  id:number,
+  name: string;
+  author:{
+    name : string;
+  };
+  year : number,
+  description : string;
+  maxReadTime: number;
+  price: number;
+  isBorrowed: boolean
+}
+
 function App() {
   const [count,setCounter] = useState<number>(initialBorrowCount);
   const [currentBookList,updateBookList] = useState(books);
+  const [isBookFormOpen, showBookForm] = useState(false);
 
   // const updateBorrowCount = (bookList:Book[]) => {
   //   let initialCount = 0;
@@ -43,14 +57,43 @@ function App() {
     // updateBorrowCount(newBookList);
   }
 
+  const addNewBook = async (book:newBookProps) =>  {
+    // const book_id = 
+    // const isBookBorrowed = false;
+    // Add new book object to the existing list
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+          console.log("Timeout finished!!");
+          resolve();
+      }, 5000);
+  });
+    updateBookList((previousList) => {
+      return [...previousList,book]
+    })
+    showBookForm(false);
+  }
 
   return (
+
+    
     <>
       <Header></Header>
       <br></br>
-      <div>No. of books borrowed : {count}</div>
+      <div>
+      <button onClick={()=>showBookForm(true)}>Add new book</button>
+      </div>
+      
       <br></br>
-      <BookList allBooks={currentBookList} passCounter={setCounter} deleteHandle={deleteBook}></BookList>
+      {isBookFormOpen ? 
+      <>
+        <NewBookForm addBookHandle={addNewBook} cancelHandle={() => {showBookForm(false)}}></NewBookForm>
+      </> : 
+      <>
+        <div>No. of books borrowed : {count}</div>
+        <br></br>
+        <BookList allBooks={currentBookList} passCounter={setCounter} deleteHandle={deleteBook}></BookList>
+      </>
+      }
     </>
   )
 }
